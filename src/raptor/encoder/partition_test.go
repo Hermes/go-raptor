@@ -1,12 +1,11 @@
-package partition
+package encoder
 
 import (
-	"raptor/partition"
 	"testing"
 )
 
 func TestPartition(t *testing.T) {
-	IL, IS, JL, JS := partition.Partition(10, 20)
+	IL, IS, JL, JS := Partition(10, 20)
 	if IL != 1 {
 		t.Error("IL calculated improperly")
 	}
