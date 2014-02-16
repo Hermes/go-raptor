@@ -53,7 +53,7 @@ func Block(filename string) (Source){
 		for j := 0; j < KL; j++{
 			_, err := reader.Read(buf)
 			if err != nil {
-				log.Fatal(KL)
+				log.Fatal(err)
 			}
 			symbol[j] = SourceSymbol{
 				ESI:j,
