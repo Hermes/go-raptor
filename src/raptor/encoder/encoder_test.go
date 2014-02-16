@@ -19,3 +19,7 @@ func TestPartition(t *testing.T) {
 		t.Error("JS calculated improperly")
 	}
 }
+
+func TestEncoder(t *testing.T) {
+	Block("background.jpg")
+}
