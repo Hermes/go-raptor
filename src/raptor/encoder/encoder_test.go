@@ -21,5 +21,5 @@ func TestPartition(t *testing.T) {
 }
 
 func TestEncoder(t *testing.T) {
-	Block("background.jpg")
+	Block("test")
 }
