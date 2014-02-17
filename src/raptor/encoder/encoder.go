@@ -44,45 +44,46 @@ func Block(filename string) (Source){
 	F :=float64(info.Size())
 	Kt := int(math.Ceil(F / float64(T)))
 	KL, KS, ZL, ZS := Partition(Kt, 5) // TODO find out how to get Z
-	buf := make([]byte, T)
-	blocks := make([]SourceBlock, 5) //TODO should be Z...
+	blocks := make([]SourceBlock, 0) //TODO should be Z...
 	// Partition the object into the first ZL blocks of KL source symbols of T
 	// octets
 	for i := 0; i < ZL; i++{
-		symbol := make([]SourceSymbol, KL) //to store the KL source symbols
+		symbol := make([]SourceSymbol, 0) //to store the KL source symbols
 		for j := 0; j < KL; j++{
-			_, err := reader.Read(buf)
+			current := SourceSymbol{
+				ESI:j,
+				dat:make([]byte, T),
+			}
+			_, err := reader.Read(current.dat)
 			if err != nil {
 				log.Fatal(err)
 			}
-			symbol[j] = SourceSymbol{
-				ESI:j,
-				dat:buf,
-			}
+			symbol = append(symbol, current)
 		}
-		blocks[i] = SourceBlock{
+		blocks = append(blocks, SourceBlock{
 			SBN:i,
 			symbols:symbol,
-		}
+		})
 	}
 	// Partition the object into the next ZS blocks of KS source symbols of T
 	// octets
 	for i := 0; i < ZS; i++{
-		symbol := make([]SourceSymbol, KS) //to store the KS source symbols
+		symbol := make([]SourceSymbol, 0) //to store the KS source symbols
 		for j := 0; j < KS; j++{
-			_, err := reader.Read(buf)
+			current := SourceSymbol{
+				ESI:j,
+				dat:make([]byte, T),
+			}
+			_, err := reader.Read(current.dat)
 			if err != nil{
 				log.Fatal(err)
 			}
-			symbol[j] = SourceSymbol{
-				ESI:KL+j,
-				dat:buf,
-			}
+			symbol = append(symbol, current)
 		}
-		blocks[ZL+i] = SourceBlock{
+		blocks = append(blocks, SourceBlock{
 			SBN:ZL+i,
 			symbols:symbol,
-		}
+		})
 	}
 	return Source{
 		blocks:blocks,

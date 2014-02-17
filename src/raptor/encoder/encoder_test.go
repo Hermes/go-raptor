@@ -20,6 +20,16 @@ func TestPartition(t *testing.T) {
 	}
 }
 
+/*
+This is more a sanity test than a proper test, check that the blocks have
+different symbols. and that all the symbols aren't the same
+*/
 func TestEncoder(t *testing.T) {
-	Block("test")
+	result := Block("test")
+	if result.blocks[0].symbols[1] == result.blocks[1].symbols[1]{
+		t.Error("Something is wrong symbols are matching between blocks")
+	}
+	if result.blocks[0].symbols[1] == result.blocks[0].symbols[2]{
+		t.Error("Something is wrong symbols are matching in a block")
+	}
 }
