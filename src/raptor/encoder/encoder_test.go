@@ -26,10 +26,12 @@ different symbols. and that all the symbols aren't the same
 */
 func TestEncoder(t *testing.T) {
 	result := Block("test")
-	if result.blocks[0].symbols[1] == result.blocks[1].symbols[1]{
+	blockA := result.blocks[0]
+	blockB := result.blocks[1]
+	if blockA.symbols[1].dat[1] == blockB.symbols[1].dat[1] {
 		t.Error("Something is wrong symbols are matching between blocks")
 	}
-	if result.blocks[0].symbols[1] == result.blocks[0].symbols[2]{
+	if blockA.symbols[1].dat[1] == blockA.symbols[2].dat[1] {
 		t.Error("Something is wrong symbols are matching in a block")
 	}
 }
