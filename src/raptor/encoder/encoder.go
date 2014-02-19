@@ -85,6 +85,16 @@ func Block(filename string) Source {
 			symbols: symbol,
 		})
 	}
+	if Kt*T > int(F) {
+		padding := blocks[ZL+ZS-1].symbols
+		for i := 0; i < Kt*T-int(F); i++{
+			current := SourceSymbol{
+				ESI:KS+i,
+				dat:make([]byte, T),
+			}
+			padding = append(padding, current)
+		}
+	}
 	return Source{
 		blocks: blocks,
 	}
