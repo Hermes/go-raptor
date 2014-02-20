@@ -44,19 +44,19 @@ func Block(filename string) Source {
 	F := float64(info.Size())
 	Kt := int(math.Ceil(F / float64(T)))
 	KL, KS, ZL, ZS := Partition(Kt, 5) // TODO find out how to get Z
-	blocks := make([]SourceBlock, 0)   //TODO should be Z...
+	blocks := make([]SourceBlock, 0)
 	// Partition the object into the first ZL blocks of KL source symbols of T
 	// octets
 	for i := 0; i < ZL; i++ {
-		symbol := make([]SourceSymbol, 0) //to store the KL source symbols
+		symbol := make([]SourceSymbol, 0 
 		for j := 0; j < KL; j++ {
 			current := SourceSymbol{
 				ESI: j,
-				dat: make([]byte, T),
+				dat: make([]byte, T), // create a buffer of size T
 			}
-			_, err := reader.Read(current.dat)
+			_, err := reader.Read(current.dat) // fill the buffer from the file
 			if err != nil {
-				log.Fatal(err)
+				log.Fatal(err) // report error on failure
 			}
 			symbol = append(symbol, current)
 		}
@@ -85,17 +85,27 @@ func Block(filename string) Source {
 			symbols: symbol,
 		})
 	}
+	// If Kt*T > F then for encoding purposes the last symbol of the last source
+	// block must be padded with KT*T-F zero octets
 	if Kt*T > int(F) {
 		padding := blocks[ZL+ZS-1].symbols
-		for i := 0; i < Kt*T-int(F); i++{
-			current := SourceSymbol{
-				ESI:KS+i,
-				dat:make([]byte, T),
-			}
-			padding = append(padding, current)
+		current := SourceSymbol{
+			ESI:KS+i,
+			dat:make([]byte, Kt*T-int(F)),
 		}
+		padding = append(padding, current)
 	}
-	return Source{
+	source := Source{
 		blocks: blocks,
 	}
+	return source
 }
+
+/*
+each source block with K source symbols MUST be divided into N = NL + NS 
+contiguous sub-blocks, the first NL sub-blocks each consisting of K contiguous 
+sub-symbols of size of TL*Al octets and the remaining NS sub-blocks each 
+consisting of K contiguous sub-symbols of size of TS*Al octets. The symbol 
+alignment parameter Al ensures that sub-symbols are always a multiple of Al
+ octets.
+*/
