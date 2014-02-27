@@ -32,3 +32,28 @@ func Deg(v uint) int {
 	}
 	return int(f[30])
 }
+
+/*
+Function KL as defined by sections 4.3 will find the maximum value of K' such
+that K' <= WS/(Al*(ceil(T/(Al*n)))).
+TODO write tests, confirm validity
+*/
+func KL(N_max uint32) int {
+
+	WS := 64 // TODO add these to a constants file
+	Al := 4
+	T := Al * 2
+
+	var max uint32 =  0
+	var r float64 = 0
+
+	for n := 1; n <= int(N_max); n++{
+		r = float64(WS) / (float64(Al) * math.Ceil(float64(T) / float64(Al * n)))
+		for k := 0; k < 477; k++ { // 477 is number of elements in K'
+			if float64(K[k]) <= r && uint32(K[k]) > max{
+				max = uint32(K[k])
+			}
+		}
+	}
+	return int(max)
+}

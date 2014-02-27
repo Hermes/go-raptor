@@ -5,6 +5,7 @@ import (
 	"log"
 	"math"
 	"os"
+	"github.com/wmak/go-raptor/generator"
 )
 
 const Al int = 4     //alignment variable, 4 as per recommended by 4.3
@@ -30,9 +31,11 @@ Block as defined in section 4.4.1.2  will generate the source blocks which later
 will be split into source symbols. The object will be partitioned by running the
 partition function on ceil(filesize/T) and using the resulting parameters to
 determine how to block
+TODO Convert filename parameter to Reader
 */
 
 func Block(filename string) Source {
+	
 	// open up the file
 	file, err := os.Open(filename)
 	info, _ := os.Stat(filename)
@@ -40,11 +43,19 @@ func Block(filename string) Source {
 		log.Fatal(err)
 	}
 	reader := bufio.NewReader(file)
+	
 	// Determining how to partition the source
 	F := float64(info.Size())
 	Kt := int(math.Ceil(F / float64(T)))
-	KL, KS, ZL, ZS := Partition(Kt, 5) // TODO find out how to get Z
+
+	// Determining the value of Z
+	SS := 4 // TODO findout how to get SS
+	N_max := Al * SS
+	Z := int(math.Ceil( float64(Kt) / float64(generator.KL(uint32(N_max)))))
+
+	KL, KS, ZL, ZS := Partition(Kt, Z)
 	blocks := make([]SourceBlock, 0)
+	
 	// Partition the object into the first ZL blocks of KL source symbols of T
 	// octets
 	for i := 0; i < ZL; i++ {
@@ -65,6 +76,7 @@ func Block(filename string) Source {
 			symbols: symbol,
 		})
 	}
+	
 	// Partition the object into the next ZS blocks of KS source symbols of T
 	// octets
 	for i := 0; i < ZS; i++ {
@@ -85,6 +97,7 @@ func Block(filename string) Source {
 			symbols: symbol,
 		})
 	}
+
 	// If Kt*T > F then for encoding purposes the last symbol of the last source
 	// block must be padded with KT*T-F zero octets
 	if Kt*T > int(F) {
