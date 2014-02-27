@@ -90,7 +90,7 @@ func Block(filename string) Source {
 	if Kt*T > int(F) {
 		padding := blocks[ZL+ZS-1].symbols
 		current := SourceSymbol{
-			ESI:KS+i,
+			ESI:KS + KL,
 			dat:make([]byte, Kt*T-int(F)),
 		}
 		padding = append(padding, current)
