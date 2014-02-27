@@ -48,7 +48,7 @@ func Block(filename string) Source {
 	// Partition the object into the first ZL blocks of KL source symbols of T
 	// octets
 	for i := 0; i < ZL; i++ {
-		symbol := make([]SourceSymbol, 0 
+		symbol := make([]SourceSymbol, 0) 
 		for j := 0; j < KL; j++ {
 			current := SourceSymbol{
 				ESI: j,
