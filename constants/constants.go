@@ -1,5 +1,5 @@
 package constants
 
-const WS uint = 64
-const Al uint = 4
-const T uint = Al * 2
+const WS int = 64
+const Al int = 4
+const T int = Al * 2
