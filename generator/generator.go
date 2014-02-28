@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"github.com/wmak/go-raptor/constants"
 	"math"
 )
 
@@ -21,37 +22,32 @@ func Rand(y uint, i uint, m uint) uint32 {
 
 /*
 Degree generator as defined by section 5.3.5.2 will find the index of f using
-linear search such that f[d-1] <= v <= f[d] TODO take min(d, W-2) also maybe
-binary search?.
+linear search such that constants.F[d-1] <= v <= constants.F[d].
+TODO take min(d, W-2) also maybe binary search?.
 */
 func Deg(v uint) int {
 	for i := 1; i <= 30; i++ {
-		if f[i-1] <= v && v < f[i] {
+		if constants.F[i-1] <= v && v < constants.F[i] {
 			return i
 		}
 	}
-	return int(f[30])
+	return int(constants.F[30])
 }
 
 /*
 Function KL as defined by sections 4.3 will find the maximum value of K' such
-that K' <= WS/(Al*(ceil(T/(Al*n)))).
+that K' <= constants.WS/(constants.Al*(ceil(constants.T/(constants.Al*n)))).
 TODO write tests, confirm validity
 */
 func KL(N_max uint32) int {
-
-	WS := 64 // TODO add these to a constants file
-	Al := 4
-	T := Al * 2
-
-	var max uint32 =  0
+	var max uint32 = 0
 	var r float64 = 0
 
-	for n := 1; n <= int(N_max); n++{
-		r = float64(WS) / (float64(Al) * math.Ceil(float64(T) / float64(Al * n)))
+	for n := 1; n <= int(N_max); n++ {
+		r = float64(constants.WS) / (float64(constants.Al) * math.Ceil(float64(constants.T)/float64(constants.Al*n)))
 		for k := 0; k < 477; k++ { // 477 is number of elements in K'
-			if float64(K[k]) <= r && uint32(K[k]) > max{
-				max = uint32(K[k])
+			if float64(constants.K[k]) <= r && uint32(constants.K[k]) > max {
+				max = uint32(constants.K[k])
 			}
 		}
 	}
