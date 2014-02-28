@@ -51,6 +51,16 @@ func Block(filename string) Source {
 	N_max := constants.Al * SS
 	Z := int(math.Ceil( float64(Kt) / float64(generator.KL(uint32(N_max)))))
 
+	// Determining the value of N
+	N := N_max
+	for i := 1; i <= N_max; i++{
+		if (math.Ceil(float64(Kt)/float64(Z)) <= float64(generator.KL(uint32(i)))){
+			N = i
+			break
+		}
+	}
+	N += 0 //TODO remove
+
 	KL, KS, ZL, ZS := Partition(Kt, Z)
 	blocks := make([]SourceBlock, 0)
 	
