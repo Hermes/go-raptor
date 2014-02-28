@@ -5,11 +5,9 @@ import (
 	"log"
 	"math"
 	"os"
+	"github.com/wmak/go-raptor/constants"
 	"github.com/wmak/go-raptor/generator"
 )
-
-const Al int = 4     //alignment variable, 4 as per recommended by 4.3
-const T int = Al * 2 //the symbol size
 
 //As defined by section 4.4.1.1
 type Source struct {
@@ -46,11 +44,11 @@ func Block(filename string) Source {
 	
 	// Determining how to partition the source
 	F := float64(info.Size())
-	Kt := int(math.Ceil(F / float64(T)))
+	Kt := int(math.Ceil(F / float64(constants.T)))
 
 	// Determining the value of Z
 	SS := 4 // TODO findout how to get SS
-	N_max := Al * SS
+	N_max := constants.Al * SS
 	Z := int(math.Ceil( float64(Kt) / float64(generator.KL(uint32(N_max)))))
 
 	KL, KS, ZL, ZS := Partition(Kt, Z)
@@ -63,7 +61,7 @@ func Block(filename string) Source {
 		for j := 0; j < KL; j++ {
 			current := SourceSymbol{
 				ESI: j,
-				dat: make([]byte, T), // create a buffer of size T
+				dat: make([]byte, constants.T), // create a buffer of size T
 			}
 			_, err := reader.Read(current.dat) // fill the buffer from the file
 			if err != nil {
@@ -84,7 +82,7 @@ func Block(filename string) Source {
 		for j := 0; j < KS; j++ {
 			current := SourceSymbol{
 				ESI: j,
-				dat: make([]byte, T),
+				dat: make([]byte, constants.T),
 			}
 			_, err := reader.Read(current.dat)
 			if err != nil {
@@ -100,11 +98,11 @@ func Block(filename string) Source {
 
 	// If Kt*T > F then for encoding purposes the last symbol of the last source
 	// block must be padded with KT*T-F zero octets
-	if Kt*T > int(F) {
+	if Kt*constants.T > int(F) {
 		padding := blocks[ZL+ZS-1].symbols
 		current := SourceSymbol{
 			ESI:KS + KL,
-			dat:make([]byte, Kt*T-int(F)),
+			dat:make([]byte, Kt*constants.T-int(F)),
 		}
 		padding = append(padding, current)
 	}
