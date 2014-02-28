@@ -17,7 +17,7 @@ func Rand(y uint, i uint, m uint) uint32 {
 	x1 := int(math.Mod(math.Floor(float64(y)/pow28)+float64(i), pow28))
 	x2 := int(math.Mod(math.Floor(float64(y)/pow216)+float64(i), pow28))
 	x3 := int(math.Mod(math.Floor(float64(y)/pow224)+float64(i), pow28))
-	return uint32(math.Mod(float64(V0[x0]^V1[x1]^V2[x2]^V3[x3]), float64(m)))
+	return uint32(math.Mod(float64(constants.V0[x0]^constants.V1[x1]^constants.V2[x2]^constants.V3[x3]), float64(m)))
 }
 
 /*
