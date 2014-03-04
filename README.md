@@ -1,5 +1,6 @@
 go-raptor
 =========
+[![Build Status](https://drone.io/github.com/wmak/go-raptor/status.png)](https://drone.io/github.com/wmak/go-raptor/latest)
 
 Go implementation of [RaptorQ](https://datatracker.ietf.org/doc/rfc6330/?include_text=1)
 
