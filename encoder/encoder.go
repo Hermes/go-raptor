@@ -33,7 +33,7 @@ TODO Convert filename parameter to Reader
 */
 
 func Block(filename string) Source {
-	
+
 	// open up the file
 	file, err := os.Open(filename)
 	info, _ := os.Stat(filename)
@@ -41,7 +41,7 @@ func Block(filename string) Source {
 		log.Fatal(err)
 	}
 	reader := bufio.NewReader(file)
-	
+
 	// Determining how to partition the source
 	F := float64(info.Size())
 	Kt := int(math.Ceil(F / float64(constants.T)))
@@ -63,11 +63,11 @@ func Block(filename string) Source {
 
 	KL, KS, ZL, ZS := Partition(Kt, Z)
 	blocks := make([]SourceBlock, 0)
-	
+
 	// Partition the object into the first ZL blocks of KL source symbols of T
 	// octets
 	for i := 0; i < ZL; i++ {
-		symbol := make([]SourceSymbol, 0) 
+		symbol := make([]SourceSymbol, 0)
 		for j := 0; j < KL; j++ {
 			current := SourceSymbol{
 				ESI: j,
@@ -84,7 +84,7 @@ func Block(filename string) Source {
 			symbols: symbol,
 		})
 	}
-	
+
 	// Partition the object into the next ZS blocks of KS source symbols of T
 	// octets
 	for i := 0; i < ZS; i++ {
