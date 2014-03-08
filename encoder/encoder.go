@@ -116,6 +116,13 @@ func Block(filename string) Source {
 		}
 		padding = append(padding, current)
 	}
+
+	// Divide each source block with K source symbols into N sub-blocks each
+	// consisting of k contiguous sub symbols of size TL*AJ octets
+	for i := 0; i < Z; i++ {
+		block = blocks[i];
+
+	}
 	source := Source{
 		blocks: blocks,
 	}
@@ -129,4 +136,5 @@ sub-symbols of size of TL*Al octets and the remaining NS sub-blocks each
 consisting of K contiguous sub-symbols of size of TS*Al octets. The symbol 
 alignment parameter Al ensures that sub-symbols are always a multiple of Al
  octets.
+
 */
