@@ -2,11 +2,11 @@ package encoder
 
 import (
 	"bufio"
+	"github.com/wmak/go-raptor/constants"
+	"github.com/wmak/go-raptor/generator"
 	"log"
 	"math"
 	"os"
-	"github.com/wmak/go-raptor/constants"
-	"github.com/wmak/go-raptor/generator"
 )
 
 //As defined by section 4.4.1.1
@@ -15,7 +15,8 @@ type Source struct {
 }
 
 type SourceBlock struct {
-	SBN     int
+	SBN int
+	sub [][]SourceSymbol
 	symbols []SourceSymbol
 }
 
@@ -49,20 +50,21 @@ func Block(filename string) Source {
 	// Determining the value of Z
 	SS := 4 // TODO findout how to get SS
 	N_max := constants.Al * SS
-	Z := int(math.Ceil( float64(Kt) / float64(generator.KL(uint32(N_max)))))
+	Z := int(math.Ceil(float64(Kt) / float64(generator.KL(uint32(N_max)))))
 
 	// Determining the value of N
 	N := N_max
-	for i := 1; i <= N_max; i++{
-		if (math.Ceil(float64(Kt)/float64(Z)) <= float64(generator.KL(uint32(i)))){
+	for i := 1; i <= N_max; i++ {
+		if math.Ceil(float64(Kt)/float64(Z)) <= float64(generator.KL(uint32(i))) {
 			N = i
 			break
 		}
 	}
-	N += 0 //TODO remove
 
 	KL, KS, ZL, ZS := Partition(Kt, Z)
+	TL, TS, NL, NS := Partition(constants.T/constants.Al, N)
 	blocks := make([]SourceBlock, 0)
+	sub := make([][]SourceSymbol, 0)
 
 	// Partition the object into the first ZL blocks of KL source symbols of T
 	// octets
@@ -80,8 +82,9 @@ func Block(filename string) Source {
 			symbol = append(symbol, current)
 		}
 		blocks = append(blocks, SourceBlock{
-			SBN:     i,
+			SBN: i,
 			symbols: symbol,
+			sub: sub,
 		})
 	}
 
@@ -101,8 +104,9 @@ func Block(filename string) Source {
 			symbol = append(symbol, current)
 		}
 		blocks = append(blocks, SourceBlock{
-			SBN:     ZL + i,
+			SBN: ZL + i,
 			symbols: symbol,
+			sub: sub,
 		})
 	}
 
@@ -111,8 +115,8 @@ func Block(filename string) Source {
 	if Kt*constants.T > int(F) {
 		padding := blocks[ZL+ZS-1].symbols
 		current := SourceSymbol{
-			ESI:KS + KL,
-			dat:make([]byte, Kt*constants.T-int(F)),
+			ESI: KS + KL,
+			dat: make([]byte, Kt*constants.T-int(F)),
 		}
 		padding = append(padding, current)
 	}
@@ -120,8 +124,13 @@ func Block(filename string) Source {
 	// Divide each source block with K source symbols into N sub-blocks each
 	// consisting of k contiguous sub symbols of size TL*AJ octets
 	for i := 0; i < Z; i++ {
-		block = blocks[i];
-
+		block := blocks[i]
+		for j := 0; j < NL; j++{
+			newsub := make([]SourceSymbol, 0)
+			block.sub = append(block.sub, newsub)
+		}
+		for j := 0; j < NS; j++{
+		}
 	}
 	source := Source{
 		blocks: blocks,
