@@ -5,18 +5,20 @@ import (
 )
 
 func TestPartition(t *testing.T) {
-	IL, IS, JL, JS := Partition(10, 20)
+	I := 16
+	J := 42
+	IL, IS, JL, JS := Partition(I, J)
 	if IL != 1 {
-		t.Error("IL calculated improperly")
+		t.Errorf("IL calculated improperly %d instead of 1", IL)
 	}
 	if IS != 0 {
-		t.Error("IS calculated improperly")
+		t.Errorf("IS calculated improperly %d instead of 0", IL)
 	}
-	if JL != 10 {
-		t.Error("JL calculated improperly")
+	if JL != 16 {
+		t.Errorf("JL calculated improperly %d instead of 40", JL)
 	}
-	if JS != 10 {
-		t.Error("JS calculated improperly")
+	if JS != 26 {
+		t.Errorf("JS calculated improperly %d instead of 26", JS)
 	}
 }
 
