@@ -1,7 +1,6 @@
 package encoder
 
 import (
-	"log"
 	"os"
 	"testing"
 )
@@ -29,11 +28,11 @@ different symbols. and that all the symbols aren't the same
 func TestEncoder(t *testing.T) {
 	file, err := os.Open("test")
 	if err != nil {
-		log.Fatal(err)
+		t.Fatal(err)
 	}
 	info, err := os.Stat("test")
 	if err != nil {
-		log.Fatal(err)
+		t.Fatal(err)
 	}
 	size := info.Size()
 	result := Block(file, size)
