@@ -1,6 +1,8 @@
 package encoder
 
 import (
+	"log"
+	"os"
 	"testing"
 )
 
@@ -25,7 +27,16 @@ This is more a sanity test than a proper test, check that the blocks have
 different symbols. and that all the symbols aren't the same
 */
 func TestEncoder(t *testing.T) {
-	result := Block("test")
+	file, err := os.Open("test")
+	if err != nil {
+		log.Fatal(err)
+	}
+	info, err := os.Stat("test")
+	if err != nil {
+		log.Fatal(err)
+	}
+	size := info.Size()
+	result := Block(file, size)
 	blockA := result.blocks[0]
 	blockB := result.blocks[1]
 	if blockA.symbols[1].dat[1] == blockB.symbols[1].dat[1] {
