@@ -2,11 +2,11 @@ package encoder
 
 import (
 	"bufio"
-	"log"
-	"math"
-	"os"
 	"github.com/wmak/go-raptor/constants"
 	"github.com/wmak/go-raptor/generator"
+	"io"
+	"log"
+	"math"
 )
 
 //As defined by section 4.4.1.1
@@ -32,29 +32,23 @@ determine how to block
 TODO Convert filename parameter to Reader
 */
 
-func Block(filename string) Source {
+func Block(file io.Reader, filesize int64) Source {
 
-	// open up the file
-	file, err := os.Open(filename)
-	info, _ := os.Stat(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
 	reader := bufio.NewReader(file)
 
 	// Determining how to partition the source
-	F := float64(info.Size())
+	F := float64(filesize)
 	Kt := int(math.Ceil(F / float64(constants.T)))
 
 	// Determining the value of Z
 	SS := 4 // TODO findout how to get SS
 	N_max := constants.Al * SS
-	Z := int(math.Ceil( float64(Kt) / float64(generator.KL(uint32(N_max)))))
+	Z := int(math.Ceil(float64(Kt) / float64(generator.KL(uint32(N_max)))))
 
 	// Determining the value of N
 	N := N_max
-	for i := 1; i <= N_max; i++{
-		if (math.Ceil(float64(Kt)/float64(Z)) <= float64(generator.KL(uint32(i)))){
+	for i := 1; i <= N_max; i++ {
+		if math.Ceil(float64(Kt)/float64(Z)) <= float64(generator.KL(uint32(i))) {
 			N = i
 			break
 		}
@@ -111,8 +105,8 @@ func Block(filename string) Source {
 	if Kt*constants.T > int(F) {
 		padding := blocks[ZL+ZS-1].symbols
 		current := SourceSymbol{
-			ESI:KS + KL,
-			dat:make([]byte, Kt*constants.T-int(F)),
+			ESI: KS + KL,
+			dat: make([]byte, Kt*constants.T-int(F)),
 		}
 		padding = append(padding, current)
 	}
@@ -123,10 +117,10 @@ func Block(filename string) Source {
 }
 
 /*
-each source block with K source symbols MUST be divided into N = NL + NS 
-contiguous sub-blocks, the first NL sub-blocks each consisting of K contiguous 
-sub-symbols of size of TL*Al octets and the remaining NS sub-blocks each 
-consisting of K contiguous sub-symbols of size of TS*Al octets. The symbol 
+each source block with K source symbols MUST be divided into N = NL + NS
+contiguous sub-blocks, the first NL sub-blocks each consisting of K contiguous
+sub-symbols of size of TL*Al octets and the remaining NS sub-blocks each
+consisting of K contiguous sub-symbols of size of TS*Al octets. The symbol
 alignment parameter Al ensures that sub-symbols are always a multiple of Al
  octets.
 */
