@@ -32,12 +32,12 @@ determine how to block
 TODO Convert filename parameter to Reader
 */
 
-func Block(file io.Reader, size int64) Source {
+func Block(file io.Reader, filesize int64) Source {
 
 	reader := bufio.NewReader(file)
 
 	// Determining how to partition the source
-	F := float64(size)
+	F := float64(filesize)
 	Kt := int(math.Ceil(F / float64(constants.T)))
 
 	// Determining the value of Z
