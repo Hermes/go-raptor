@@ -30,7 +30,7 @@ func TestEncoder(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	info, err := os.Stat("test")
+	info, err := file.Stat()
 	if err != nil {
 		t.Fatal(err)
 	}

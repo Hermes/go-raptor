@@ -1,7 +1,6 @@
 package encoder
 
 import (
-	"bufio"
 	"github.com/wmak/go-raptor/constants"
 	"github.com/wmak/go-raptor/generator"
 	"io"
@@ -32,9 +31,7 @@ determine how to block
 TODO Convert filename parameter to Reader
 */
 
-func Block(file io.Reader, filesize int64) Source {
-
-	reader := bufio.NewReader(file)
+func Block(reader io.Reader, filesize int64) Source {
 
 	// Determining how to partition the source
 	F := float64(filesize)
